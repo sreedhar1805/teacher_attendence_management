@@ -1,0 +1,356 @@
+basePath: /api/v1
+definitions:
+  model.Attendance:
+    properties:
+      check_in:
+        type: string
+      check_out:
+        type: string
+      created_at:
+        type: string
+      date:
+        type: string
+      id:
+        type: integer
+      status:
+        type: string
+      teacher:
+        $ref: '#/definitions/model.Teacher'
+      teacher_id:
+        type: integer
+      updated_at:
+        type: string
+    required:
+    - status
+    - teacher_id
+    type: object
+  model.AttendanceDTO:
+    properties:
+      checkIn:
+        type: string
+      checkOut:
+        type: string
+      date:
+        type: string
+      teacherId:
+        type: integer
+      teacherName:
+        type: string
+    type: object
+  model.AttendanceResponse:
+    properties:
+      attendanceList:
+        items:
+          $ref: '#/definitions/model.AttendanceDTO'
+        type: array
+    type: object
+  model.Teacher:
+    properties:
+      created_at:
+        type: string
+      email:
+        type: string
+      first_name:
+        type: string
+      id:
+        type: integer
+      last_name:
+        type: string
+      phone:
+        type: string
+      subject:
+        type: string
+      updated_at:
+        type: string
+    type: object
+host: localhost:8082
+info:
+  contact:
+    email: support@example.com
+    name: API Support
+  description: REST APIs for managing teachers and attendance records.
+  termsOfService: http://swagger.io/terms/
+  title: School Teacher Management API
+  version: "1.0"
+paths:
+  /attendance:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Attendance'
+            type: array
+      summary: Get all attendance records
+      tags:
+      - attendance
+    post:
+      consumes:
+      - application/json
+      description: Creates a new attendance entry (teacher_id and status are mandatory)
+      parameters:
+      - description: Attendance object
+        in: body
+        name: attendance
+        required: true
+        schema:
+          $ref: '#/definitions/model.Attendance'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/model.Attendance'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Create attendance record
+      tags:
+      - attendance
+  /attendance/{id}:
+    delete:
+      parameters:
+      - description: Attendance ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Delete attendance
+      tags:
+      - attendance
+    get:
+      parameters:
+      - description: Attendance ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Attendance'
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get attendance by ID
+      tags:
+      - attendance
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Attendance ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Updated attendance
+        in: body
+        name: attendance
+        required: true
+        schema:
+          $ref: '#/definitions/model.Attendance'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Attendance'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Update attendance
+      tags:
+      - attendance
+  /attendanceByDate:
+    get:
+      description: Get attendance for a teacher filtered by month/year and checked-in
+        count today
+      parameters:
+      - description: Teacher ID
+        in: query
+        name: teacherId
+        required: true
+        type: integer
+      - description: Month (1-12), default current month
+        in: query
+        name: month
+        type: integer
+      - description: Year, default current year
+        in: query
+        name: year
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.AttendanceResponse'
+      summary: Get attendance by teacher
+      tags:
+      - attendance
+  /teachers:
+    get:
+      description: Search teachers across first name, last name, email, subject
+      parameters:
+      - description: Search keyword
+        in: query
+        name: q
+        type: string
+      - description: Search keyword
+        in: query
+        name: subject
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Teacher'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Search teachers
+      tags:
+      - teachers
+    post:
+      consumes:
+      - application/json
+      description: Create a new teacher
+      parameters:
+      - description: Teacher data
+        in: body
+        name: teacher
+        required: true
+        schema:
+          $ref: '#/definitions/model.Teacher'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/model.Teacher'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Create teacher
+      tags:
+      - teachers
+  /teachers/{id}:
+    get:
+      parameters:
+      - description: Teacher ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Teacher'
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get teacher by ID
+      tags:
+      - teachers
+    put:
+      consumes:
+      - application/json
+      description: Update a teacher by ID
+      parameters:
+      - description: Teacher ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Teacher data
+        in: body
+        name: teacher
+        required: true
+        schema:
+          $ref: '#/definitions/model.Teacher'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Teacher'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Update teacher
+      tags:
+      - teachers
+schemes:
+- http
+swagger: "2.0"
