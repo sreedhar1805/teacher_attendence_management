@@ -115,3 +115,31 @@ func (s *AttendanceService) GetAttendanceByTeacherMonth(teacherID uint, month ti
 
 	return resp, nil
 }
+
+func (s *AttendanceService) GetAttendanceByMonthAndDate(date time.Time) (*model.AttendanceResponse, error) {
+
+	month := date.Month()
+	year := date.Year()
+
+	attList, err := s.Repo.FindByMonthAndDate(month, year, date)
+	if err != nil {
+		return nil, err
+	}
+
+	result := []model.AttendanceDTO{}
+
+	for _, att := range attList {
+		dto := model.AttendanceDTO{
+			TeacherID:   att.Teacher.ID,
+			TeacherName: att.Teacher.FirstName + " " + att.Teacher.LastName,
+			CheckIn:     att.CheckIn,
+			CheckOut:    att.CheckOut,
+			Date:        att.Date.Format("02-01-2006"),
+		}
+		result = append(result, dto)
+	}
+
+	return &model.AttendanceResponse{
+		AttendanceList: result,
+	}, nil
+}

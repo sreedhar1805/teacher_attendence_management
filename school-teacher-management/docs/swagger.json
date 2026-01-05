@@ -248,6 +248,43 @@
                 }
             }
         },
+        "/attendanceByFilterDate": {
+            "get": {
+                "description": "Get attendance filtered by date/month/year (teacher independent)",
+                "tags": [
+                    "attendance"
+                ],
+                "summary": "Get attendance for a date",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Day of month (1-31)",
+                        "name": "date",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Month (1-12)",
+                        "name": "month",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Year (YYYY)",
+                        "name": "year",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.AttendanceResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/teachers": {
             "get": {
                 "description": "Search teachers across first name, last name, email, subject",

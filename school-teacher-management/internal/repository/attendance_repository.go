@@ -65,6 +65,27 @@ func (r *AttendanceRepository) FindByTeacherAndMonth(
 	return list, err
 }
 
+func (r *AttendanceRepository) FindByMonthAndDate(
+	month time.Month,
+	year int,
+	date time.Time,
+) ([]model.Attendance, error) {
+
+	var list []model.Attendance
+
+	err := r.DB.
+		Preload("Teacher").
+		Where(
+			"EXTRACT(MONTH FROM date) = ? AND EXTRACT(YEAR FROM date) = ? AND DATE(date) = DATE(?)",
+			int(month),
+			year,
+			date,
+		).
+		Find(&list).Error
+
+	return list, err
+}
+
 // CountCheckedInToday counts how many teachers have checked in today
 func (r *AttendanceRepository) CountCheckedInToday() (int64, error) {
 	today := time.Now().Truncate(24 * time.Hour)

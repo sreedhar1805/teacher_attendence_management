@@ -96,6 +96,7 @@ func main() {
 		api.PUT("/attendance/:id", attendanceHandler.UpdateAttendance)
 		api.DELETE("/attendance/:id", attendanceHandler.DeleteAttendance)
 		api.GET("/attendanceByDate", attendanceHandler.GetAttendanceByDate)
+		api.GET("/attendanceByFilterDate", attendanceHandler.GetAttendanceByFilterDate)
 	}
 
 	// -------------------- SWAGGER --------------------

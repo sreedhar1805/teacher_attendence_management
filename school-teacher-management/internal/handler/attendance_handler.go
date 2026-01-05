@@ -217,3 +217,60 @@ func (h *AttendanceHandler) GetAttendanceByDate(c *gin.Context) {
 
 	c.JSON(http.StatusOK, resp)
 }
+
+// GetAttendance godoc
+// @Summary Get attendance for a date
+// @Description Get attendance filtered by date/month/year (teacher independent)
+// @Tags attendance
+// @Param date  query int false "Day of month (1-31)"
+// @Param month query int false "Month (1-12)"
+// @Param year  query int false "Year (YYYY)"
+// @Success 200 {object} model.AttendanceResponse
+// @Router /attendanceByFilterDate [get]
+func (h *AttendanceHandler) GetAttendanceByFilterDate(c *gin.Context) {
+
+	now := time.Now()
+
+	dayStr := c.DefaultQuery("date", strconv.Itoa(now.Day()))
+	monthStr := c.DefaultQuery("month", strconv.Itoa(int(now.Month())))
+	yearStr := c.DefaultQuery("year", strconv.Itoa(now.Year()))
+
+	day, err := strconv.Atoi(dayStr)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid date"})
+		return
+	}
+
+	monthInt, err := strconv.Atoi(monthStr)
+	if monthInt < 1 || monthInt > 12 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "month must be 1-12"})
+		return
+	}
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid month"})
+		return
+	}
+
+	year, err := strconv.Atoi(yearStr)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid year"})
+		return
+	}
+
+	date := time.Date(
+		year,
+		time.Month(monthInt),
+		day,
+		0, 0, 0, 0,
+		time.Local,
+	)
+
+	resp, err := h.Service.GetAttendanceByMonthAndDate(date)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, resp)
+}

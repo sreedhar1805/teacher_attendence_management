@@ -226,6 +226,30 @@ paths:
       summary: Get attendance by teacher
       tags:
       - attendance
+  /attendanceByFilterDate:
+    get:
+      description: Get attendance filtered by date/month/year (teacher independent)
+      parameters:
+      - description: Day of month (1-31)
+        in: query
+        name: date
+        type: integer
+      - description: Month (1-12)
+        in: query
+        name: month
+        type: integer
+      - description: Year (YYYY)
+        in: query
+        name: year
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.AttendanceResponse'
+      summary: Get attendance for a date
+      tags:
+      - attendance
   /teachers:
     get:
       description: Search teachers across first name, last name, email, subject
