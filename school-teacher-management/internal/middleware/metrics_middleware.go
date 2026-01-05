@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"strconv"
 	"time"
 
 	"school-teacher-management/internal/metrics"
@@ -14,18 +15,14 @@ func MetricsMiddleware() gin.HandlerFunc {
 
 		c.Next()
 
-		duration := time.Since(start).Seconds()
-		status := c.Writer.Status()
+		statusCode := strconv.Itoa(c.Writer.Status())
+		path := c.FullPath()
+		if path == "" {
+			path = c.Request.URL.Path
+		}
 
-		metrics.HttpRequestsTotal.WithLabelValues(
-			c.Request.Method,
-			c.FullPath(),
-			string(rune(status)),
-		).Inc()
+		metrics.HttpRequestsTotal.WithLabelValues(c.Request.Method, path, statusCode).Inc()
 
-		metrics.HttpRequestDuration.WithLabelValues(
-			c.Request.Method,
-			c.FullPath(),
-		).Observe(duration)
+		metrics.HttpRequestDuration.WithLabelValues(c.Request.Method, path).Observe(time.Since(start).Seconds())
 	}
 }

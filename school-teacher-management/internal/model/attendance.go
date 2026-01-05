@@ -26,3 +26,8 @@ type AttendanceResponse struct {
 	AttendanceList []AttendanceDTO `json:"attendanceList"`
 	// CheckedInToday int             `json:"checkedInToday"`
 }
+
+type AttendanceRequest struct {
+	TeacherID uint   `json:"teacher_id" binding:"required"`
+	Status    string `json:"status" binding:"required"`
+}

@@ -36,7 +36,13 @@ func (r *AttendanceRepository) Update(att *model.Attendance) error {
 }
 
 func (r *AttendanceRepository) Delete(id uint) error {
-	return r.DB.Delete(&model.Attendance{}, id).Error
+	result := r.DB.Delete(&model.Attendance{}, id)
+
+	if result.RowsAffected == 0 {
+		return gorm.ErrRecordNotFound
+	}
+
+	return result.Error
 }
 
 func (r *AttendanceRepository) FindByTeacherAndDate(
