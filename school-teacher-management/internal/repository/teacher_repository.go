@@ -50,3 +50,7 @@ func (r *TeacherRepository) SearchAllFields(q string, subject string) ([]model.T
 	err := db.Find(&teachers).Error
 	return teachers, err
 }
+
+func (r *TeacherRepository) BulkCreate(teachers []model.Teacher) error {
+	return r.DB.Create(&teachers).Error
+}

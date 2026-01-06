@@ -88,6 +88,7 @@ func main() {
 		api.GET("/teachers", teacherHandler.SearchTeachers)
 		api.GET("/teachers/:id", teacherHandler.GetTeacherByID)
 		api.PUT("/teachers/:id", teacherHandler.UpdateTeacher)
+		api.POST("/teachers/bulk", teacherHandler.CreateTeachers)
 
 		// Attendance
 		api.POST("/attendance", attendanceHandler.CreateAttendance)

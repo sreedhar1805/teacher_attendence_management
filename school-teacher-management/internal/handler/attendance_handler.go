@@ -36,34 +36,35 @@ func (h *AttendanceHandler) CreateAttendance(c *gin.Context) {
 	var input model.AttendanceRequest
 
 	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(http.StatusBadRequest, map[string]string{
+		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
 		})
 		return
 	}
 
-	// Force DATE only (remove time)
-	// today := time.Now().Truncate(24 * time.Hour)
-	// input.Date = today
 	metrics.AttendanceCreatedTotal.Inc()
 
 	if err := h.Service.MarkAttendance(&input); err != nil {
-		c.JSON(http.StatusBadRequest, map[string]string{
+		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
 		})
 		return
 	}
 
-	if input.Status == "checkIn" {
+	switch input.Status {
+	case "checkIn":
 		c.JSON(http.StatusCreated, gin.H{
 			"message": "You have checked in successfully",
 		})
-	} else if input.Status == "checkOut" {
+	case "checkOut":
 		c.JSON(http.StatusCreated, gin.H{
 			"message": "You have checked out successfully",
 		})
+	default:
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "invalid status value",
+		})
 	}
-
 }
 
 // GetAttendances godoc

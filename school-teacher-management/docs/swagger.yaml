@@ -1,6 +1,6 @@
 basePath: /api/v1
 definitions:
-  model.Attendance:
+  school-teacher-management_internal_model.Attendance:
     properties:
       check_in:
         type: string
@@ -15,7 +15,7 @@ definitions:
       status:
         type: string
       teacher:
-        $ref: '#/definitions/model.Teacher'
+        $ref: '#/definitions/school-teacher-management_internal_model.Teacher'
       teacher_id:
         type: integer
       updated_at:
@@ -24,7 +24,7 @@ definitions:
     - status
     - teacher_id
     type: object
-  model.AttendanceDTO:
+  school-teacher-management_internal_model.AttendanceDTO:
     properties:
       checkIn:
         type: string
@@ -37,7 +37,7 @@ definitions:
       teacherName:
         type: string
     type: object
-  model.AttendanceRequest:
+  school-teacher-management_internal_model.AttendanceRequest:
     properties:
       status:
         type: string
@@ -47,14 +47,14 @@ definitions:
     - status
     - teacher_id
     type: object
-  model.AttendanceResponse:
+  school-teacher-management_internal_model.AttendanceResponse:
     properties:
       attendanceList:
         items:
-          $ref: '#/definitions/model.AttendanceDTO'
+          $ref: '#/definitions/school-teacher-management_internal_model.AttendanceDTO'
         type: array
     type: object
-  model.Teacher:
+  school-teacher-management_internal_model.Teacher:
     properties:
       created_at:
         type: string
@@ -72,6 +72,23 @@ definitions:
         type: string
       updated_at:
         type: string
+    type: object
+  school-teacher-management_internal_model.TeacherRequest:
+    properties:
+      email:
+        type: string
+      first_name:
+        type: string
+      last_name:
+        type: string
+      phone:
+        type: string
+      subject:
+        type: string
+    required:
+    - email
+    - first_name
+    - last_name
     type: object
 host: localhost:8082
 info:
@@ -92,7 +109,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/model.Attendance'
+              $ref: '#/definitions/school-teacher-management_internal_model.Attendance'
             type: array
       summary: Get all attendance records
       tags:
@@ -107,7 +124,7 @@ paths:
         name: attendance
         required: true
         schema:
-          $ref: '#/definitions/model.AttendanceRequest'
+          $ref: '#/definitions/school-teacher-management_internal_model.AttendanceRequest'
       produces:
       - application/json
       responses:
@@ -165,7 +182,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.Attendance'
+            $ref: '#/definitions/school-teacher-management_internal_model.Attendance'
         "404":
           description: Not Found
           schema:
@@ -189,14 +206,14 @@ paths:
         name: attendance
         required: true
         schema:
-          $ref: '#/definitions/model.Attendance'
+          $ref: '#/definitions/school-teacher-management_internal_model.Attendance'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.Attendance'
+            $ref: '#/definitions/school-teacher-management_internal_model.Attendance'
         "400":
           description: Bad Request
           schema:
@@ -234,7 +251,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.AttendanceResponse'
+            $ref: '#/definitions/school-teacher-management_internal_model.AttendanceResponse'
       summary: Get attendance by teacher
       tags:
       - attendance
@@ -258,7 +275,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.AttendanceResponse'
+            $ref: '#/definitions/school-teacher-management_internal_model.AttendanceResponse'
       summary: Get attendance for a date
       tags:
       - attendance
@@ -281,7 +298,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/model.Teacher'
+              $ref: '#/definitions/school-teacher-management_internal_model.Teacher'
             type: array
         "500":
           description: Internal Server Error
@@ -302,14 +319,14 @@ paths:
         name: teacher
         required: true
         schema:
-          $ref: '#/definitions/model.Teacher'
+          $ref: '#/definitions/school-teacher-management_internal_model.Teacher'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/model.Teacher'
+            $ref: '#/definitions/school-teacher-management_internal_model.Teacher'
         "400":
           description: Bad Request
           schema:
@@ -339,7 +356,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.Teacher'
+            $ref: '#/definitions/school-teacher-management_internal_model.Teacher'
         "404":
           description: Not Found
           schema:
@@ -364,14 +381,14 @@ paths:
         name: teacher
         required: true
         schema:
-          $ref: '#/definitions/model.Teacher'
+          $ref: '#/definitions/school-teacher-management_internal_model.Teacher'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.Teacher'
+            $ref: '#/definitions/school-teacher-management_internal_model.Teacher'
         "400":
           description: Bad Request
           schema:
@@ -385,6 +402,43 @@ paths:
               type: string
             type: object
       summary: Update teacher
+      tags:
+      - teachers
+  /teachers/bulk:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: List of teachers
+        in: body
+        name: teachers
+        required: true
+        schema:
+          items:
+            $ref: '#/definitions/school-teacher-management_internal_model.TeacherRequest'
+          type: array
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Create multiple teachers
       tags:
       - teachers
 schemes:

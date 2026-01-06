@@ -28,3 +28,19 @@ func (s *TeacherService) GetTeacher(id uint) (*model.Teacher, error) {
 func (s *TeacherService) SearchTeachers(q string, subject string) ([]model.Teacher, error) {
 	return s.Repo.SearchAllFields(q, subject)
 }
+
+func (s *TeacherService) CreateTeachers(req []model.TeacherRequest) error {
+	var teachers []model.Teacher
+
+	for _, t := range req {
+		teachers = append(teachers, model.Teacher{
+			FirstName: t.FirstName,
+			LastName:  t.LastName,
+			Email:     t.Email,
+			Subject:   t.Subject,
+			Phone:     t.Phone,
+		})
+	}
+
+	return s.Repo.BulkCreate(teachers)
+}

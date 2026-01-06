@@ -12,3 +12,11 @@ type Teacher struct {
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }
+
+type TeacherRequest struct {
+	FirstName string `json:"first_name" binding:"required"`
+	LastName  string `json:"last_name" binding:"required"`
+	Email     string `json:"email" binding:"required,email"`
+	Subject   string `json:"subject"`
+	Phone     string `json:"phone"`
+}

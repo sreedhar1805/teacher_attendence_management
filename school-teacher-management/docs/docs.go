@@ -34,7 +34,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/model.Attendance"
+                                "$ref": "#/definitions/school-teacher-management_internal_model.Attendance"
                             }
                         }
                     }
@@ -59,7 +59,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/model.AttendanceRequest"
+                            "$ref": "#/definitions/school-teacher-management_internal_model.AttendanceRequest"
                         }
                     }
                 ],
@@ -116,7 +116,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.Attendance"
+                            "$ref": "#/definitions/school-teacher-management_internal_model.Attendance"
                         }
                     },
                     "404": {
@@ -155,7 +155,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/model.Attendance"
+                            "$ref": "#/definitions/school-teacher-management_internal_model.Attendance"
                         }
                     }
                 ],
@@ -163,7 +163,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.Attendance"
+                            "$ref": "#/definitions/school-teacher-management_internal_model.Attendance"
                         }
                     },
                     "400": {
@@ -248,7 +248,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.AttendanceResponse"
+                            "$ref": "#/definitions/school-teacher-management_internal_model.AttendanceResponse"
                         }
                     }
                 }
@@ -285,7 +285,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.AttendanceResponse"
+                            "$ref": "#/definitions/school-teacher-management_internal_model.AttendanceResponse"
                         }
                     }
                 }
@@ -321,7 +321,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/model.Teacher"
+                                "$ref": "#/definitions/school-teacher-management_internal_model.Teacher"
                             }
                         }
                     },
@@ -355,7 +355,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/model.Teacher"
+                            "$ref": "#/definitions/school-teacher-management_internal_model.Teacher"
                         }
                     }
                 ],
@@ -363,7 +363,64 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/model.Teacher"
+                            "$ref": "#/definitions/school-teacher-management_internal_model.Teacher"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/teachers/bulk": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "teachers"
+                ],
+                "summary": "Create multiple teachers",
+                "parameters": [
+                    {
+                        "description": "List of teachers",
+                        "name": "teachers",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/school-teacher-management_internal_model.TeacherRequest"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
                         }
                     },
                     "400": {
@@ -409,7 +466,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.Teacher"
+                            "$ref": "#/definitions/school-teacher-management_internal_model.Teacher"
                         }
                     },
                     "404": {
@@ -449,7 +506,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/model.Teacher"
+                            "$ref": "#/definitions/school-teacher-management_internal_model.Teacher"
                         }
                     }
                 ],
@@ -457,7 +514,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.Teacher"
+                            "$ref": "#/definitions/school-teacher-management_internal_model.Teacher"
                         }
                     },
                     "400": {
@@ -483,7 +540,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "model.Attendance": {
+        "school-teacher-management_internal_model.Attendance": {
             "type": "object",
             "required": [
                 "status",
@@ -509,7 +566,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "teacher": {
-                    "$ref": "#/definitions/model.Teacher"
+                    "$ref": "#/definitions/school-teacher-management_internal_model.Teacher"
                 },
                 "teacher_id": {
                     "type": "integer"
@@ -519,7 +576,7 @@ const docTemplate = `{
                 }
             }
         },
-        "model.AttendanceDTO": {
+        "school-teacher-management_internal_model.AttendanceDTO": {
             "type": "object",
             "properties": {
                 "checkIn": {
@@ -539,7 +596,7 @@ const docTemplate = `{
                 }
             }
         },
-        "model.AttendanceRequest": {
+        "school-teacher-management_internal_model.AttendanceRequest": {
             "type": "object",
             "required": [
                 "status",
@@ -554,18 +611,18 @@ const docTemplate = `{
                 }
             }
         },
-        "model.AttendanceResponse": {
+        "school-teacher-management_internal_model.AttendanceResponse": {
             "type": "object",
             "properties": {
                 "attendanceList": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/model.AttendanceDTO"
+                        "$ref": "#/definitions/school-teacher-management_internal_model.AttendanceDTO"
                     }
                 }
             }
         },
-        "model.Teacher": {
+        "school-teacher-management_internal_model.Teacher": {
             "type": "object",
             "properties": {
                 "created_at": {
@@ -590,6 +647,31 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "school-teacher-management_internal_model.TeacherRequest": {
+            "type": "object",
+            "required": [
+                "email",
+                "first_name",
+                "last_name"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "first_name": {
+                    "type": "string"
+                },
+                "last_name": {
+                    "type": "string"
+                },
+                "phone": {
+                    "type": "string"
+                },
+                "subject": {
                     "type": "string"
                 }
             }
