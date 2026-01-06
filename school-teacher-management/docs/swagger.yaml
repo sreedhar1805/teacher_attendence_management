@@ -37,6 +37,16 @@ definitions:
       teacherName:
         type: string
     type: object
+  model.AttendanceRequest:
+    properties:
+      status:
+        type: string
+      teacher_id:
+        type: integer
+    required:
+    - status
+    - teacher_id
+    type: object
   model.AttendanceResponse:
     properties:
       attendanceList:
@@ -92,19 +102,21 @@ paths:
       - application/json
       description: Creates a new attendance entry (teacher_id and status are mandatory)
       parameters:
-      - description: Attendance object
+      - description: Attendance request
         in: body
         name: attendance
         required: true
         schema:
-          $ref: '#/definitions/model.Attendance'
+          $ref: '#/definitions/model.AttendanceRequest'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/model.Attendance'
+            additionalProperties:
+              type: string
+            type: object
         "400":
           description: Bad Request
           schema:

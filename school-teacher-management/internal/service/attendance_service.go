@@ -36,7 +36,7 @@ func (s *AttendanceService) DeleteAttendance(id uint) error {
 	return s.Repo.Delete(id)
 }
 
-func (s *AttendanceService) MarkAttendance(input *model.Attendance) error {
+func (s *AttendanceService) MarkAttendance(input *model.AttendanceRequest) error {
 	var existing model.Attendance
 
 	today := time.Now().Truncate(24 * time.Hour)
@@ -55,9 +55,13 @@ func (s *AttendanceService) MarkAttendance(input *model.Attendance) error {
 			return errors.New("check-in required before check-out")
 		}
 
-		input.Date = today
-		input.CheckIn = &now
-		return s.Repo.Create(input)
+		attendance := model.Attendance{
+			TeacherID: input.TeacherID,
+			Date:      today,
+			Status:    input.Status,
+			CheckIn:   &now,
+		}
+		return s.Repo.Create(&attendance)
 	}
 
 	// Record exists
@@ -76,6 +80,7 @@ func (s *AttendanceService) MarkAttendance(input *model.Attendance) error {
 		}
 
 		existing.CheckOut = &now
+		existing.Status = input.Status
 		return s.Repo.Update(&existing)
 	}
 

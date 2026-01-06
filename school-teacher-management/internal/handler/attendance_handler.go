@@ -27,13 +27,13 @@ func NewAttendanceHandler(s *service.AttendanceService) *AttendanceHandler {
 // @Tags         attendance
 // @Accept       json
 // @Produce      json
-// @Param        attendance  body      model.Attendance  true  "Attendance object"
-// @Success      201         {object}  model.Attendance
+// @Param        attendance  body      model.AttendanceRequest  true  "Attendance request"
+// @Success      201         {object}  map[string]string
 // @Failure      400         {object}  map[string]string
 // @Failure      500         {object}  map[string]string
 // @Router       /attendance [post]
 func (h *AttendanceHandler) CreateAttendance(c *gin.Context) {
-	var input model.Attendance
+	var input model.AttendanceRequest
 
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, map[string]string{
@@ -43,8 +43,8 @@ func (h *AttendanceHandler) CreateAttendance(c *gin.Context) {
 	}
 
 	// Force DATE only (remove time)
-	today := time.Now().Truncate(24 * time.Hour)
-	input.Date = today
+	// today := time.Now().Truncate(24 * time.Hour)
+	// input.Date = today
 	metrics.AttendanceCreatedTotal.Inc()
 
 	if err := h.Service.MarkAttendance(&input); err != nil {
@@ -54,7 +54,16 @@ func (h *AttendanceHandler) CreateAttendance(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusCreated, input)
+	if input.Status == "checkIn" {
+		c.JSON(http.StatusCreated, gin.H{
+			"message": "You have checked in successfully",
+		})
+	} else if input.Status == "checkOut" {
+		c.JSON(http.StatusCreated, gin.H{
+			"message": "You have checked out successfully",
+		})
+	}
+
 }
 
 // GetAttendances godoc

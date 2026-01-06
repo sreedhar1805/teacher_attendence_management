@@ -54,12 +54,12 @@ const docTemplate = `{
                 "summary": "Create attendance record",
                 "parameters": [
                     {
-                        "description": "Attendance object",
+                        "description": "Attendance request",
                         "name": "attendance",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/model.Attendance"
+                            "$ref": "#/definitions/model.AttendanceRequest"
                         }
                     }
                 ],
@@ -67,7 +67,10 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/model.Attendance"
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
                         }
                     },
                     "400": {
@@ -533,6 +536,21 @@ const docTemplate = `{
                 },
                 "teacherName": {
                     "type": "string"
+                }
+            }
+        },
+        "model.AttendanceRequest": {
+            "type": "object",
+            "required": [
+                "status",
+                "teacher_id"
+            ],
+            "properties": {
+                "status": {
+                    "type": "string"
+                },
+                "teacher_id": {
+                    "type": "integer"
                 }
             }
         },
